@@ -1,0 +1,12 @@
+{
+  "scene": "versions",
+  "file": "out/versions.mp4",
+  "frames": 300,
+  "optics": true,
+  "seconds": 603.424,
+  "safeZone": {
+    "checkedFrames": 300,
+    "framesWithViolations": 0,
+    "violations": []
+  }
+}

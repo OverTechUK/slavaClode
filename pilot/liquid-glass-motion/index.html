@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liquid Glass Motion</title>
+<style>
+  @font-face { font-family: "Bebas Neue Cyrillic"; src: url(assets/fonts/BebasNeue-Cyrillic.ttf); }
+  @font-face { font-family: "Caveat"; src: url(assets/fonts/Caveat-variable.ttf); font-weight: 400 700; }
+  @font-face { font-family: "Inter"; src: url(assets/fonts/Inter-variable.ttf); font-weight: 100 900; }
+  html, body { margin: 0; background: #120509; color: #F8EDF0; font: 14px "Inter", sans-serif; }
+  #bar { display: flex; gap: 8px; align-items: center; padding: 8px 12px; flex-wrap: wrap; }
+  #bar button, #bar label { background: #240B16; color: #F8EDF0; border: 1px solid #702A42; border-radius: 6px; padding: 6px 10px; }
+  #out { display: block; height: calc(100vh - 56px); max-width: 100%; margin: 0 auto; }
+  body.render #bar { display: none; } body.render #out { height: auto; width: 1080px; max-width: none; }
+</style>
+</head>
+<body>
+<div id="bar">
+  <button data-s="lens">1 · Линза</button><button data-s="layers">2 · Под капотом</button><button data-s="versions">3 · Три подачи</button>
+  <button id="play">⏯</button><input id="seek" type="range" min="0" value="0" style="flex:1">
+  <label><input id="optics" type="checkbox" checked> оптика</label>
+  <label><input id="debug" type="checkbox"> safe-zone</label><span id="info"></span>
+</div>
+<canvas id="out"></canvas>
+<script type="module">
+  import { Stage, scenes, checkAudit } from './src/stage.js';
+  import { FPS } from './src/tokens.js';
+  const q = new URLSearchParams(location.search);
+  if (q.has('render')) document.body.classList.add('render');
+  const stage = new Stage(document.getElementById('out'));
+  const fontsOk = await Stage.loadFonts();
+  let id = q.get('scene') || 'layers', frame = 0, playing = !q.has('render');
+  const $ = s => document.getElementById(s);
+  const opts = () => ({ optics: $('optics').checked, debug: $('debug').checked });
+  if (q.get('optics') === '0') $('optics').checked = false;
+  if (q.get('debug') === '1') $('debug').checked = true;
+  // API для рендера и QA
+  window.LG = {
+    fontsOk, glError: stage.glError || null, scenes: Object.fromEntries(Object.entries(scenes).map(([k, s]) => [k, { duration: s.duration, beats: s.beats }])),
+    frame(sid, f, o) { const r = stage.render(sid, f, o); return { bad: checkAudit(r.audit.filter(b => !b.soft)), n: r.audit.length, optics: r.optics }; },
+  };
+  const draw = () => { const r = stage.render(id, frame, opts()); const bad = checkAudit(r.audit.filter(b => !b.soft));
+    $('seek').max = scenes[id].duration * FPS - 1; $('seek').value = frame;
+    $('info').textContent = `${id} · ${(frame / FPS).toFixed(2)} c · стекло ${r.optics ? 'WebGL' : 'fallback'} · вне safe: ${bad.length}`; };
+  document.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { id = b.dataset.s; frame = 0; draw(); });
+  $('play').onclick = () => playing = !playing; $('seek').oninput = e => { frame = +e.target.value; draw(); };
+  $('optics').onchange = $('debug').onchange = draw;
+  let last = 0;
+  const loop = ts => { if (playing && ts - last >= 1000 / FPS) { last = ts; frame = (frame + 1) % (scenes[id].duration * FPS); draw(); } requestAnimationFrame(loop); };
+  window.LG.ready = true;
+  if (!q.has('render')) requestAnimationFrame(loop); else draw();
+</script>
+</body>
+</html>

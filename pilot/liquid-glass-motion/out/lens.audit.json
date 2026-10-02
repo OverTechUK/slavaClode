@@ -1,0 +1,12 @@
+{
+  "scene": "lens",
+  "file": "out/lens.mp4",
+  "frames": 300,
+  "optics": true,
+  "seconds": 601.682,
+  "safeZone": {
+    "checkedFrames": 300,
+    "framesWithViolations": 0,
+    "violations": []
+  }
+}

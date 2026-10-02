@@ -1,0 +1,12 @@
+{
+  "scene": "layers",
+  "file": "out/layers.mp4",
+  "frames": 390,
+  "optics": true,
+  "seconds": 655.118,
+  "safeZone": {
+    "checkedFrames": 390,
+    "framesWithViolations": 0,
+    "violations": []
+  }
+}

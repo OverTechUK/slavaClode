@@ -1,0 +1,4 @@
+lens: decode=ok hold_ydif[4.4-7.4]: mean=0.0006 max=0.0010 n=90
+layers: decode=ok hold_ydif[11.0-12.9]: mean=0.0007 max=0.0061 n=57
+versions: decode=ok hold_ydif[8.4-9.9]: mean=0.0001 max=0.0009 n=45
+repeatability (6 кадров, 2 прогона): identical
