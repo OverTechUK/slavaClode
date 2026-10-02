@@ -1,0 +1,12 @@
+{
+  "scene": "layers",
+  "file": "out/layers_fallback.mp4",
+  "frames": 390,
+  "optics": false,
+  "seconds": 480.823,
+  "safeZone": {
+    "checkedFrames": 390,
+    "framesWithViolations": 0,
+    "violations": []
+  }
+}

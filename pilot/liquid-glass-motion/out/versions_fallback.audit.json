@@ -1,0 +1,12 @@
+{
+  "scene": "versions",
+  "file": "out/versions_fallback.mp4",
+  "frames": 300,
+  "optics": false,
+  "seconds": 439.406,
+  "safeZone": {
+    "checkedFrames": 300,
+    "framesWithViolations": 0,
+    "violations": []
+  }
+}
